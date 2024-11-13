@@ -4,10 +4,17 @@
 
 ---
 
+![Spoti3 Screenshot](screenshot.png)
+
+---
+
 ## Features
 
 -   **Spotify Playlist Integration**: Fetch tracks directly from your Spotify playlists by pasting the playlist URL.
 -   **YouTube Search & Download**: Find corresponding YouTube videos for each track and download them as MP3 files.
+-   **Download Folder Customization**: Choose a folder to save the MP3 files locally.
+-   **Prompt Before Download**: Optionally prompt before downloading each track.
+-   **User-Friendly UI**: Simple and intuitive interface with dark mode.
 
 ---
 
@@ -46,7 +53,7 @@ python ui.py
 
 1. **Fetch Tracks**: Enter the URL of a Spotify playlist and click "Fetch Tracks From Playlist" to load the tracks.
 2. **Pick Folder**: Choose a folder where you want to save the downloaded MP3 files.
-3. **Prompt Before Download**: Enable the option to be prompted before each download if you want control over the music you want to download.
+3. **Prompt Before Download**: Enable this option to control which tracks are downloaded.
 4. **Download MP3s**: Click the "Download Tracks" button to start the download process.
 
 The app will search YouTube for each track and download the audio as an MP3 file.
@@ -56,15 +63,13 @@ The app will search YouTube for each track and download the audio as an MP3 file
 ## Requirements
 
 -   Python 3.x
--   `CustomTkinter` for GUI
+-   `CustomTkinter` for the graphical user interface
 -   `pyperclip` for clipboard management
--   `spotipy` for getting the list of tracks from spotify playlists
--   `pytubefix` for downloading YouTube videos as mp3
+-   `spotipy` for fetching track lists from Spotify playlists
+-   `pytubefix` for downloading YouTube videos as MP3
 
-You can install the required dependencies with:
+Install the dependencies with:
 
 ```bash
 pip install -r requirements.txt
 ```
-
----
