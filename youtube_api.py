@@ -5,7 +5,12 @@ from pytubefix.cli import on_progress
 def search_youtube(title, artist):
     results = Search(f"{title} by {artist}").videos
     if results:
-        return results[0].watch_url, results[0].title
+        url = results[0].watch_url
+        title = results[0].title
+        duration = round((results[0].length/60),1)
+        
+        return url, title, duration 
+    
     else:
         return None, None
 

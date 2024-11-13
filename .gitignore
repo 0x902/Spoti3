@@ -29,6 +29,7 @@ desktop.ini
 
 # Cache files and folders
 .cache/
+.cache
 *.egg-info/
 .eggs/
 *.sqlite3

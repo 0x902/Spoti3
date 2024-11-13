@@ -5,22 +5,26 @@ from tkinter import filedialog, messagebox
 from spotify_api import get_all_spotify_tracks
 from youtube_api import search_youtube, download_mp3
 
+
 # Window dimensions
 window_width = 700
 window_height = 700
 group_spacing = 20
 version = "1.0"
 
+
 customtkinter.set_appearance_mode("dark") # Theme
+# customtkinter.set_default_color_theme("./spotify_theme.json")
 app = customtkinter.CTk()
-app.title("Spoti3 - " + version)
+app.title("Spoti3 - " + version) 
 app.geometry(f"{window_width}x{window_height}")
 app.resizable(False, True)  # Disable both horizontal and vertical resizing
 
-# Declare global variable for tracking if tracks have been fetched
+
 is_fetched = False
 music_list = []
 download_path = "spoti3_downloads/"
+
 
 # Paste url into playlist url entry field
 def paste_url():
@@ -31,6 +35,7 @@ def paste_url():
         playlist_url_entry.delete(0, "end")
         playlist_url_entry.insert(0, s)
 
+
 def clear_scrollbox():
     for widget in scrollable_frame.winfo_children():  # Iterate over all children widgets
                     widget.destroy()  # Destroy each widget
@@ -38,6 +43,8 @@ def clear_scrollbox():
 def add_to_scrollbox(text, color=None):
     label = customtkinter.CTkLabel(scrollable_frame, text=text, width=window_width, anchor="w", font=("Arial", 16), fg_color=color)
     label.pack(padx=20, pady=(0, 0))
+
+
 
 def fetch_download_tracks():
     global is_fetched  # Declare as global to modify the value
@@ -54,13 +61,13 @@ def fetch_download_tracks():
         clear_scrollbox()
 
         for music in music_list:
-            url, title = search_youtube(music['title'], music['artist'])
+            url, title, duration = search_youtube(music['title'], music['artist'])
             if url is None:
                 add_to_scrollbox(f"[ERROR]{music['title']} ({music['artist']}) | Skipping...")
                 continue
 
             if prompt_before_download:
-                user_choice = messagebox.askyesno("Download Confirmation", f"Do you want to download {title} of length 4 minutes")
+                user_choice = messagebox.askyesno("Download Confirmation", f"Do you want to download {title} of length {duration} minutes")
                 if not user_choice:
                     continue
 
@@ -69,10 +76,10 @@ def fetch_download_tracks():
             success, message = download_mp3(url, download_path, filename)
 
             if success:
-                add_to_scrollbox(f"[SUCCESS] {filename}", color="green")
+                add_to_scrollbox(f" [SUCCESS] {filename}", color="green")
                 add_to_scrollbox("")
             else:
-                add_to_scrollbox(f"[FAILED]  {filename}", color="red")
+                add_to_scrollbox(f" [FAILED]  {filename}", color="red")
                 add_to_scrollbox("")
         
         messagebox.showinfo("Downloads Complete!", "Your Downloads are complete!")
@@ -90,15 +97,14 @@ def fetch_download_tracks():
         music_list = get_all_spotify_tracks(playlist_url)
 
         if music_list:
-            label = customtkinter.CTkLabel(scrollable_frame, text=f"Found {len(music_list)} tracks in playlist", width=window_width, anchor="w", font=("Arial", 20, "bold"))
-            label.pack(padx=20, pady=(0, 10))
+            add_to_scrollbox(f"Found {len(music_list)} tracks in playlist")
             for count, track in enumerate(music_list):
-                label = customtkinter.CTkLabel(scrollable_frame, text=f"{count+1}.  {track['title']} ({track['artist']})", width=window_width, anchor="w", font=("Arial", 16))
-                label.pack(padx=20, pady=(0, 0))
+                add_to_scrollbox(f"{count+1}.  {track['title']} ({track['artist']})")
             is_fetched = True
             fetch_download_button.configure(text="Download Tracks")
         else:
             messagebox.showinfo("No Tracks", "No tracks found in this playlist.")
+
 
 # Function to open the folder picker dialog and display the selected folder path
 def pick_folder():
@@ -139,7 +145,7 @@ pick_download_folder_button.pack(padx=20, pady=(0, group_spacing))
 scrollable_frame = customtkinter.CTkScrollableFrame(app, width=window_width, corner_radius=0)
 scrollable_frame.pack(padx=20, pady=(0, group_spacing), fill="both", expand=True)
 
-music_list = [
+welcome_text = [
     "",
     "[+]  Welcome to Spoti3!",
     "[+]  An open-source Spotify downloader.",
@@ -148,9 +154,8 @@ music_list = [
     "[+]  Free, simple, and fast!"
 ]
 
-for count, music in enumerate(music_list):
-    label = customtkinter.CTkLabel(scrollable_frame, text=f"{music}", width=window_width, anchor="w", font=("Arial", 16))
-    label.pack(padx=20, pady=(0, 0))
+for text in welcome_text:
+    add_to_scrollbox(text)
 
 prompt_download = customtkinter.StringVar(value="yes")
 prompt_download_checkbox = customtkinter.CTkCheckBox(app, text="Prompt before each track",  variable=prompt_download, onvalue="yes", offvalue="no", corner_radius=0, font=("Arial", 16))
